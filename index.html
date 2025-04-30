@@ -7,61 +7,56 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<div class="search-container">
-    <div>
-        <input type="text" id="searchQuery" placeholder="Enter search term..." required>
-        <button id="searchButton" onclick="performMultiSearch()">Search All</button>
+<div class="container">
+
+
+
+        <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
+
+
+        <a href="https://chatgpt.com" class="rectangle" target="_blank">ChatGPT</a>
+
+
+        <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro-exp-03-25&utm_source=deepmind.google&utm_medium=referral&utm_campaign=gdm&utm_content=" class="rectangle" target="_blank">Gemini 2.5 Pro</a>
+
+
+        <a href="https://graydient.ai/" class="rectangle" target="_blank">Graydient AI</a>
+
+
+        <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
+
     </div>
-</div>
-<script>
-    function performMultiSearch() {
-        const queryInput = document.getElementById('searchQuery');
-        const query = queryInput.value.trim();
 
-        if (!query) {
-            alert('Please enter a search term.');
-            queryInput.focus();
-            return;
-        }
+    <h2>Search All General Search Engines</h2>
+    <form id="multiSearchForm">
+        <input type="text" id="searchInput" placeholder="Enter your search term..." required>
+        <input type="submit" value="Search All">
+    </form>
 
-        const encodedQuery = encodeURIComponent(query);
-
-        const searchEngines = [
-            { name: "Google", urlTemplate: `https://www.google.com/search?q=${encodedQuery}` },
-            { name: "DuckDuckGo", urlTemplate: `https://duckduckgo.com/?q=${encodedQuery}` },
-            { name: "Bing", urlTemplate: `https://www.bing.com/search?q=${encodedQuery}` },
-            { name: "Yahoo", urlTemplate: `https://search.yahoo.com/search?p=${encodedQuery}` },
-            { name: "Startpage", urlTemplate: `https://www.startpage.com/sp/search?query=${encodedQuery}` }, 
-            { name: "Ecosia", urlTemplate: `https://www.ecosia.org/search?q=${encodedQuery}` },
-            { name: "Brave Search", urlTemplate: `https://search.brave.com/search?q=${encodedQuery}` },
-            { name: "Qwant", urlTemplate: `https://www.qwant.com/?q=${encodedQuery}` }, // Often reliable
-            { name: "Yandex", urlTemplate: `https://yandex.com/search/?text=${encodedQuery}` },
-            { name: "Mojeek", urlTemplate: `https://www.mojeek.com/search?q=${encodedQuery}` }
+    <script>
+        const engines = [
+            { name: "Google",      url: "https://www.google.com/search?q=" },
+            { name: "Bing",        url: "https://www.bing.com/search?q=" },
+            { name: "Yahoo",       url: "https://search.yahoo.com/search?p=" },
+            { name: "DuckDuckGo",  url: "https://duckduckgo.com/?q=" },
+            { name: "Ecosia",      url: "https://www.ecosia.org/search?q=" },
+            { name: "Startpage",   url: "https://www.startpage.com/sp/search?query=" },
+            { name: "Qwant",       url: "https://www.qwant.com/?q=" },
+            { name: "Swisscows",   url: "https://swisscows.com/web?query=" },
+            { name: "Mojeek",      url: "https://www.mojeek.com/search?q=" },
+            { name: "Yandex",      url: "https://yandex.com/search/?text=" }
         ];
 
-        console.log(`Attempting to search for: "${query}"`);
-
-        searchEngines.forEach(engine => {
-            try {
-                const openedWindow = window.open(engine.urlTemplate, '_blank');
-                if (!openedWindow || openedWindow.closed || typeof openedWindow.closed == 'undefined') {
-                     console.warn(`Could not open tab for ${engine.name}. Pop-up likely blocked.`);
-                } else {
-                    console.log(`Opened tab for ${engine.name}`);
-                }
-            } catch (error) {
-                console.error(`Error opening tab for ${engine.name}:`, error);
+        document.getElementById("multiSearchForm").addEventListener("submit", function(e) {
+            e.preventDefault();
+            const query = encodeURIComponent(document.getElementById("searchInput").value.trim());
+            if (query) {
+                engines.forEach(engine => {
+                    const searchURL = engine.url + query;
+                    window.open(searchURL, '_blank');
+                });
             }
-                setTimeout(() => {}, 50);
         });
-    }
-
-    document.getElementById('searchQuery').addEventListener('keypress', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault(); // Prevent default form submission if it were in a form
-            performMultiSearch();
-        }
-    });
-</script>
+    </script>
 </body>
 </html>

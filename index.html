@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slaet FYI</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://duckduckgo.com/js/duckassist.js"></script>
 </head>
 <body>
 <div class="container">
@@ -27,11 +28,14 @@
 
     </div>
 
-    <h2>Search All General Search Engines</h2>
+
     <form id="multiSearchForm">
         <input type="text" id="searchInput" placeholder="Enter your search term..." required>
         <input type="submit" value="Search All">
     </form>
+    <input id="chat-input" type="text" placeholder="Ask me a question...">
+    <button id="chat-button" onclick="askQuestion()">Ask</button>
+    <div id="chat-log"></div>
 
     <script>
         const engines = [
@@ -57,6 +61,22 @@
                 });
             }
         });
+        
+    const duckAssist = new DuckAssist({
+        apiKey: 'YOUR_API_KEY_HERE',
+        endpoint: 'https://api.duckduckgo.com/'
+    });
+    
+    document.getElementById('chat-button').addEventListener('click', () => {
+        const question = document.getElementById('chat-input').value;
+        duckAssist.ask(question)
+            .then(answer => {
+                document.getElementById('chat-log').innerHTML += `<p>You: ${question}</p><p>AI: ${answer}</p>`;
+            })
+            .catch(error => {
+                console.error('Error asking question:', error);
+            });
+    });
     </script>
 </body>
 </html>

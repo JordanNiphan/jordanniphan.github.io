@@ -20,25 +20,55 @@
     <button id="search-button" onclick="searchAllEngines()">Search All</button>
     </div>
 
-    <script>
-        function searchAllEngines() {
-            var searchQuery = document.getElementById("search-input").value;
-            var searchEngines = [
-                { name: "Google", url: "https://www.google.com/search?q=" },
-                { name: "Bing", url: "https://www.bing.com/search?q=" },
-                { name: "Yahoo", url: "https://search.yahoo.com/search?p=" },
-                { name: "DuckDuckGo", url: "https://duckduckgo.com/?q=" },
-                { name: "StartPage", url: "https://www.startpage.com/do/dsearch?query=" },
-                { name: "Qwant", url: "https://www.qwant.com/?q=" },
-                { name: "Yandex", url: "https://yandex.com/search/?text=" },
-                { name: "Baidu", url: "https://www.baidu.com/s?wd=" },
-            ];
+<script>
+    function performMultiSearch() {
+        const queryInput = document.getElementById('searchQuery');
+        const query = queryInput.value.trim();
 
-            searchEngines.forEach(function(engine) {
-                var url = engine.url + encodeURIComponent(searchQuery);
-                window.open(url, "_blank");
-            });
+        if (!query) {
+            alert('Please enter a search term.');
+            queryInput.focus();
+            return;
         }
-    </script>
+
+        const encodedQuery = encodeURIComponent(query);
+
+        const searchEngines = [
+            { name: "Google", urlTemplate: `https://www.google.com/search?q=${encodedQuery}` },
+            { name: "DuckDuckGo", urlTemplate: `https://duckduckgo.com/?q=${encodedQuery}` },
+            { name: "Bing", urlTemplate: `https://www.bing.com/search?q=${encodedQuery}` },
+            { name: "Yahoo", urlTemplate: `https://search.yahoo.com/search?p=${encodedQuery}` },
+            { name: "Startpage", urlTemplate: `https://www.startpage.com/sp/search?query=${encodedQuery}` }, 
+            { name: "Ecosia", urlTemplate: `https://www.ecosia.org/search?q=${encodedQuery}` },
+            { name: "Brave Search", urlTemplate: `https://search.brave.com/search?q=${encodedQuery}` },
+            { name: "Qwant", urlTemplate: `https://www.qwant.com/?q=${encodedQuery}` }, // Often reliable
+            { name: "Yandex", urlTemplate: `https://yandex.com/search/?text=${encodedQuery}` },
+            { name: "Mojeek", urlTemplate: `https://www.mojeek.com/search?q=${encodedQuery}` }
+        ];
+
+        console.log(`Attempting to search for: "${query}"`);
+
+        searchEngines.forEach(engine => {
+            try {
+                const openedWindow = window.open(engine.urlTemplate, '_blank');
+                if (!openedWindow || openedWindow.closed || typeof openedWindow.closed == 'undefined') {
+                     console.warn(`Could not open tab for ${engine.name}. Pop-up likely blocked.`);
+                } else {
+                    console.log(`Opened tab for ${engine.name}`);
+                }
+            } catch (error) {
+                console.error(`Error opening tab for ${engine.name}:`, error);
+            }
+                setTimeout(() => {}, 50);
+        });
+    }
+
+    document.getElementById('searchQuery').addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent default form submission if it were in a form
+            performMultiSearch();
+        }
+    });
+</script>
 </body>
 </html>

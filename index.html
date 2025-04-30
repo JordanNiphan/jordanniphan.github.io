@@ -5,10 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slaet FYI</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://duckduckgo.com/js/duckassist.js"></script>
 </head>
 <body>
-<div class="container">
+    <div class="container">
         <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
         <a href="https://chatgpt.com" class="rectangle" target="_blank">ChatGPT</a>
         <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro-exp-03-25&utm_source=deepmind.google&utm_medium=referral&utm_campaign=gdm&utm_content=" class="rectangle" target="_blank">Gemini 2.5 Pro</a>
@@ -16,83 +15,118 @@
         <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
     </div>
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Search Link Generator</title>
+    <style>
+        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        #multiSearchForm input[type="text"] { padding: 10px; font-size: 1em; margin-right: 5px; min-width: 300px; }
+        #multiSearchForm input[type="submit"] { padding: 10px 15px; font-size: 1em; cursor: pointer; }
+        #resultsLinks { margin-top: 25px; }
+        #resultsLinks h2 { margin-bottom: 10px; }
+        #resultsLinks ul { list-style: none; padding: 0; }
+        #resultsLinks li { margin-bottom: 8px; }
+        #resultsLinks a {
+            text-decoration: none;
+            color: #007bff;
+            padding: 5px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            display: inline-block; /* Allows padding and border */
+            transition: background-color 0.2s ease;
+        }
+        #resultsLinks a:hover {
+            background-color: #f0f0f0;
+            text-decoration: underline;
+        }
+        .engine-name {
+            font-weight: bold;
+            display: inline-block;
+            width: 120px; /* Align links nicely */
+        }
+    </style>
+</head>
+<body>
 
-    <h1>Multi-Search Engine Viewer</h1>
+    <h1>Search Multiple Engines</h1>
 
     <form id="multiSearchForm">
         <input type="text" id="searchInput" placeholder="Enter your search term..." required>
-        <input type="submit" value="Search All in Frames">
+        <input type="submit" value="Generate Search Links">
     </form>
 
-    <div class="warning">
-        <strong>Note:</strong> Many search engines (like Google, Bing, DuckDuckGo) block their results from being displayed in iframes on other websites for security reasons (<code>X-Frame-Options</code> header). You may see blank frames or error messages below.
-    </div>
-
-    <div id="resultsContainer">
-        <!-- Iframes will be dynamically added here -->
+    <div id="resultsLinks" aria-live="polite">
+        <!-- Search result links will appear here -->
     </div>
 
     <script>
         const engines = [
+            // Add or remove engines as needed
             { name: "Google",      url: "https://www.google.com/search?q=" },
             { name: "Bing",        url: "https://www.bing.com/search?q=" },
-            { name: "Yahoo",       url: "https://search.yahoo.com/search?p=" }, // Yahoo might sometimes work
             { name: "DuckDuckGo",  url: "https://duckduckgo.com/?q=" },
+            { name: "Yahoo",       url: "https://search.yahoo.com/search?p=" },
             { name: "Ecosia",      url: "https://www.ecosia.org/search?q=" },
             { name: "Startpage",   url: "https://www.startpage.com/sp/search?query=" },
-            { name: "Qwant",       url: "https://www.qwant.com/?q=" }, // Qwant might sometimes work
-            { name: "Swisscows",   url: "https://swisscows.com/web?query=" }, // Swisscows might work
-            { name: "Mojeek",      url: "https://www.mojeek.com/search?q=" }, // Mojeek often works
+            { name: "Qwant",       url: "https://www.qwant.com/?q=" },
+            { name: "Swisscows",   url: "https://swisscows.com/web?query=" },
+            { name: "Mojeek",      url: "https://www.mojeek.com/search?q=" },
+            { name: "Brave Search",url: "https://search.brave.com/search?q=" },
         ];
 
         const form = document.getElementById("multiSearchForm");
         const searchInput = document.getElementById("searchInput");
-        const resultsContainer = document.getElementById("resultsContainer");
+        const resultsDiv = document.getElementById("resultsLinks");
 
         form.addEventListener("submit", function(e) {
-            e.preventDefault(); // Prevent the default form submission
+            e.preventDefault(); // Stop form submission
             const query = searchInput.value.trim();
 
             // Clear previous results
-            resultsContainer.innerHTML = '';
+            resultsDiv.innerHTML = '';
 
             if (query) {
                 const encodedQuery = encodeURIComponent(query);
 
+                const resultsHeader = document.createElement('h2');
+                resultsHeader.textContent = `Search Links for: "${query}"`;
+                resultsDiv.appendChild(resultsHeader);
+
+                const list = document.createElement('ul');
+
                 engines.forEach(engine => {
                     const searchURL = engine.url + encodedQuery;
 
-                    // Create a wrapper div for heading + iframe
-                    const wrapper = document.createElement('div');
-                    wrapper.className = 'iframe-wrapper';
+                    const listItem = document.createElement('li');
+                    const link = document.createElement('a');
+                    link.href = searchURL;
+                    link.textContent = `Search on ${engine.name}`;
+                    link.target = "_blank"; // Open in a new tab when clicked
+                    link.rel = "noopener noreferrer"; // Security best practice for target="_blank"
 
-                    // Create a heading for the iframe
-                    const heading = document.createElement('div');
-                    heading.className = 'iframe-heading';
-                    heading.textContent = engine.name + ' Results:';
+                    // Optional: Add engine name label before link for alignment
+                    // const label = document.createElement('span');
+                    // label.className = 'engine-name';
+                    // label.textContent = engine.name + ': ';
+                    // listItem.appendChild(label);
 
-                    // Create the iframe element
-                    const iframe = document.createElement('iframe');
-                    iframe.src = searchURL;
-                    iframe.title = `${engine.name} Search Results for ${query}`; // Good for accessibility
-                    // Width and height are set via CSS now
-
-                    // Append heading and iframe to the wrapper
-                    wrapper.appendChild(heading);
-                    wrapper.appendChild(iframe);
-
-                    // Append the wrapper to the results container
-                    resultsContainer.appendChild(wrapper);
-
-                    // Optional: Log attempt to console
-                    console.log(`Attempting to load ${engine.name} results from: ${searchURL}`);
+                    listItem.appendChild(link);
+                    list.appendChild(listItem);
                 });
+
+                resultsDiv.appendChild(list);
+
             } else {
-                 resultsContainer.innerHTML = '<p>Please enter a search term.</p>';
+                resultsDiv.innerHTML = '<p>Please enter a search term.</p>';
             }
         });
     </script>
 
+</body>
+</html>
 </body>
 </html>
 </body>

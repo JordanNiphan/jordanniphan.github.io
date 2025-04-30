@@ -9,74 +9,91 @@
 </head>
 <body>
 <div class="container">
-
-
-
         <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
-
-
         <a href="https://chatgpt.com" class="rectangle" target="_blank">ChatGPT</a>
-
-
         <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro-exp-03-25&utm_source=deepmind.google&utm_medium=referral&utm_campaign=gdm&utm_content=" class="rectangle" target="_blank">Gemini 2.5 Pro</a>
-
-
         <a href="https://graydient.ai/" class="rectangle" target="_blank">Graydient AI</a>
-
-
         <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
-
     </div>
 
 
+    <h1>Multi-Search Engine Viewer</h1>
+
     <form id="multiSearchForm">
         <input type="text" id="searchInput" placeholder="Enter your search term..." required>
-        <input type="submit" value="Search All">
+        <input type="submit" value="Search All in Frames">
     </form>
-    <input id="chat-input" type="text" placeholder="Ask me a question...">
-    <button id="chat-button" onclick="askQuestion()">Ask</button>
-    <div id="chat-log"></div>
+
+    <div class="warning">
+        <strong>Note:</strong> Many search engines (like Google, Bing, DuckDuckGo) block their results from being displayed in iframes on other websites for security reasons (<code>X-Frame-Options</code> header). You may see blank frames or error messages below.
+    </div>
+
+    <div id="resultsContainer">
+        <!-- Iframes will be dynamically added here -->
+    </div>
 
     <script>
         const engines = [
             { name: "Google",      url: "https://www.google.com/search?q=" },
             { name: "Bing",        url: "https://www.bing.com/search?q=" },
-            { name: "Yahoo",       url: "https://search.yahoo.com/search?p=" },
+            { name: "Yahoo",       url: "https://search.yahoo.com/search?p=" }, // Yahoo might sometimes work
             { name: "DuckDuckGo",  url: "https://duckduckgo.com/?q=" },
             { name: "Ecosia",      url: "https://www.ecosia.org/search?q=" },
             { name: "Startpage",   url: "https://www.startpage.com/sp/search?query=" },
-            { name: "Qwant",       url: "https://www.qwant.com/?q=" },
-            { name: "Swisscows",   url: "https://swisscows.com/web?query=" },
-            { name: "Mojeek",      url: "https://www.mojeek.com/search?q=" },
-            { name: "Yandex",      url: "https://yandex.com/search/?text=" }
+            { name: "Qwant",       url: "https://www.qwant.com/?q=" }, // Qwant might sometimes work
+            { name: "Swisscows",   url: "https://swisscows.com/web?query=" }, // Swisscows might work
+            { name: "Mojeek",      url: "https://www.mojeek.com/search?q=" }, // Mojeek often works
         ];
 
-        document.getElementById("multiSearchForm").addEventListener("submit", function(e) {
-            e.preventDefault();
-            const query = encodeURIComponent(document.getElementById("searchInput").value.trim());
+        const form = document.getElementById("multiSearchForm");
+        const searchInput = document.getElementById("searchInput");
+        const resultsContainer = document.getElementById("resultsContainer");
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            const query = searchInput.value.trim();
+
+            // Clear previous results
+            resultsContainer.innerHTML = '';
+
             if (query) {
+                const encodedQuery = encodeURIComponent(query);
+
                 engines.forEach(engine => {
-                    const searchURL = engine.url + query;
-                    window.open(searchURL, '_blank');
+                    const searchURL = engine.url + encodedQuery;
+
+                    // Create a wrapper div for heading + iframe
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'iframe-wrapper';
+
+                    // Create a heading for the iframe
+                    const heading = document.createElement('div');
+                    heading.className = 'iframe-heading';
+                    heading.textContent = engine.name + ' Results:';
+
+                    // Create the iframe element
+                    const iframe = document.createElement('iframe');
+                    iframe.src = searchURL;
+                    iframe.title = `${engine.name} Search Results for ${query}`; // Good for accessibility
+                    // Width and height are set via CSS now
+
+                    // Append heading and iframe to the wrapper
+                    wrapper.appendChild(heading);
+                    wrapper.appendChild(iframe);
+
+                    // Append the wrapper to the results container
+                    resultsContainer.appendChild(wrapper);
+
+                    // Optional: Log attempt to console
+                    console.log(`Attempting to load ${engine.name} results from: ${searchURL}`);
                 });
+            } else {
+                 resultsContainer.innerHTML = '<p>Please enter a search term.</p>';
             }
         });
-        
-    const duckAssist = new DuckAssist({
-        apiKey: 'YOUR_API_KEY_HERE',
-        endpoint: 'https://api.duckduckgo.com/'
-    });
-    
-    document.getElementById('chat-button').addEventListener('click', () => {
-        const question = document.getElementById('chat-input').value;
-        duckAssist.ask(question)
-            .then(answer => {
-                document.getElementById('chat-log').innerHTML += `<p>You: ${question}</p><p>AI: ${answer}</p>`;
-            })
-            .catch(error => {
-                console.error('Error asking question:', error);
-            });
-    });
     </script>
+
+</body>
+</html>
 </body>
 </html>

@@ -47,6 +47,29 @@
             display: inline-block;
             width: 120px; /* Align links nicely */
         }
+
+            /* Hide the video player visually */
+        #youtube-audio-player {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+            width: 1px;
+            height: 1px;
+            opacity: 0;
+        }
+
+        /* Basic styling for buttons (optional) */
+        .audio-controls button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        /* Style for disabled buttons */
+        .audio-controls button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
@@ -64,7 +87,133 @@
   <div id="yt-audio">
 <iframe width="560" height="315" src="https://www.youtube.com/embed/4xDzrJKXOOY?si=1l0biDh7g2VbTasy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
+
+    
+    <!-- 1. Custom Control Buttons -->
+    <div class="audio-controls">
+        <button id="playButton" disabled>Start Audio</button>
+        <button id="stopButton" disabled>Stop Audio</button>
+        <!-- You could add a Pause button too if needed -->
+        <!-- <button id="pauseButton" disabled>Pause Audio</button> -->
+    </div>
+
+    <!-- 2. The <iframe> placeholder -->
+    <div id="youtube-audio-player"></div>
+
+    
     <script>
+
+
+    <!-- 3. YouTube API script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
+    <!-- 4. Our JavaScript -->
+        const videoId = '4xDzrJKXOOY'; // <-- Your YouTube Video ID (replace if needed)
+
+        let player;
+        let playerReady = false;
+
+        // Get references to the buttons
+        const playBtn = document.getElementById('playButton');
+        const stopBtn = document.getElementById('stopButton');
+        // const pauseBtn = document.getElementById('pauseButton'); // Uncomment if using pause
+
+        // This function creates the player
+        function onYouTubeIframeAPIReady() {
+            console.log("YouTube API Ready");
+            player = new YT.Player('youtube-audio-player', {
+                height: '1', // Minimal size
+                width: '1',
+                videoId: videoId,
+                playerVars: {
+                    'autoplay': 0,       // IMPORTANT: Don't autoplay, wait for button click
+                    'controls': 0,       // Hide player controls
+                    'loop': 1,           // Optional: Loop the video
+                    'playlist': videoId, // Required for single video looping
+                    'showinfo': 0,
+                    'modestbranding': 1
+                    // No 'mute' needed here since we aren't autoplaying
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        // Called when the player is ready
+        function onPlayerReady(event) {
+            console.log("Player Ready");
+            playerReady = true;
+            // Enable the control buttons now that the player is ready
+            playBtn.disabled = false;
+            stopBtn.disabled = true; // Stop initially disabled (nothing to stop)
+            // pauseBtn.disabled = true; // Uncomment if using pause
+            updateButtonStates(); // Update based on initial state (should be CUED or UNSTARTED)
+        }
+
+        // Called when the player's state changes
+        function onPlayerStateChange(event) {
+            console.log("Player State Changed:", event.data);
+            updateButtonStates(); // Update button enabled/disabled status
+        }
+
+        // Handle errors
+        function onPlayerError(event) {
+            console.error("YouTube Player Error:", event.data);
+            alert('An error occurred with the audio player.');
+            // Disable all buttons on error
+            playBtn.disabled = true;
+            stopBtn.disabled = true;
+            // pauseBtn.disabled = true; // Uncomment if using pause
+        }
+
+        // Function to update button enabled/disabled states
+        function updateButtonStates() {
+            if (!playerReady) return; // Don't do anything if player isn't ready
+
+            const state = player.getPlayerState();
+
+            // Enable Play unless it's already playing or buffering
+            playBtn.disabled = (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING);
+
+            // Enable Stop only if it's playing, paused, or buffering
+            stopBtn.disabled = !(state === YT.PlayerState.PLAYING || state === YT.PlayerState.PAUSED || state === YT.PlayerState.BUFFERING);
+
+            // Enable Pause only if it's playing or buffering
+            // if (pauseBtn) { // Check if pause button exists
+            //    pauseBtn.disabled = !(state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING);
+            // }
+        }
+
+
+        // --- Event Listeners for Buttons ---
+
+        playBtn.addEventListener('click', () => {
+            if (playerReady) {
+                player.playVideo();
+                console.log("Play button clicked");
+            }
+        });
+
+        stopBtn.addEventListener('click', () => {
+            if (playerReady) {
+                player.stopVideo(); // Stops and resets video to start
+                // player.pauseVideo(); // Use pauseVideo() if you want pause functionality instead
+                console.log("Stop button clicked");
+            }
+        });
+
+        // Uncomment if using pause button
+        // pauseBtn.addEventListener('click', () => {
+        //    if (playerReady) {
+        //        player.pauseVideo();
+        //        console.log("Pause button clicked");
+        //    }
+        // });
+
+        
         const engines = [
             // Add or remove engines as needed
             { name: "Google",      url: "https://www.google.com/search?q=" },

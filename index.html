@@ -4,11 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slaet FYI</title>
-    <link rel="stylesheet" href="styles.css">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Multi-Search Link Generator</title>
     <style>
         body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+
+        .container { margin-bottom: 20px; }
+        .rectangle {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 5px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+        .rectangle:hover {
+            background-color: #e0e0e0;
+        }
+
         #multiSearchForm input[type="text"] { padding: 10px; font-size: 1em; margin-right: 5px; min-width: 300px; }
         #multiSearchForm input[type="submit"] { padding: 10px 15px; font-size: 1em; cursor: pointer; }
         #resultsLinks { margin-top: 25px; }
@@ -31,7 +45,7 @@
         .engine-name {
             font-weight: bold;
             display: inline-block;
-            width: 120px; 
+            width: 120px;
         }
 
         #youtube-audio-player {
@@ -44,43 +58,30 @@
         }
 
         .audio-controls .image-button {
-            /* Remove default button appearance */
             background: none;
             border: none;
-            padding: 0; /* Remove padding if you don't want space around the image */
-            margin: 5px; /* Keep some margin */
-
-            /* Set cursor */
+            padding: 0;
+            margin: 5px;
             cursor: pointer;
-
-            /* Optional: Add transition for smoother opacity change */
             transition: opacity 0.2s ease-in-out;
-
-            /* Optional: Ensure image fits if needed, or set button size */
-            /* width: 40px;  */
-            /* height: 40px; */
-            line-height: 0; /* Helps remove extra space below inline images */
+            line-height: 0;
+             min-width: 44px;
+             min-height: 44px;
+             display: inline-flex;
+             align-items: center;
+             justify-content: center;
         }
-
         .audio-controls .image-button img {
-             /* Make sure image is displayed correctly */
              display: block;
-             /* Optional: Set image size explicitly if needed */
-             /* width: 100%; */
-             /* height: auto; */
+             width: 32px;
+             height: 32px;
         }
-
-
-        /* Style for disabled image buttons */
         .audio-controls .image-button:disabled {
             cursor: not-allowed;
-            opacity: 0.5; /* Make it look faded/disabled */
-            /* Alternatively, you could swap the background-image if using CSS backgrounds */
+            opacity: 0.5;
         }
-
-        /* Optional: Hover effect */
         .audio-controls .image-button:not(:disabled):hover {
-            opacity: 0.8; /* Slightly fade on hover */
+            opacity: 0.8;
         }
     </style>
 </head>
@@ -92,22 +93,18 @@
         <a href="https://graydient.ai/" class="rectangle" target="_blank">Graydient AI</a>
         <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
     </div>
-    <h1>Search Multiple Engines</h1>
 
+    <h1>Search Multiple Engines</h1>
     <form id="multiSearchForm">
         <input type="text" id="searchInput" placeholder="Enter your search term..." required>
         <input type="submit" value="Generate Search Links">
     </form>
-
     <div id="resultsLinks" aria-live="polite">
     </div>
-    
+
     <div class="audio-controls">
-        <button id="playButton" class="image-button" disabled aria-label="Start Audio">
-            <img src="play-icon.png" alt="Play">
-        </button>
-        <button id="stopButton" class="image-button" disabled aria-label="Stop Audio">
-            <img src="stop-icon.png" alt="Stop">
+        <button id="toggleButton" class="image-button" disabled aria-label="Start Audio">
+            <img id="toggleIcon" src="/svg/play.svg" alt="Play">
         </button>
     </div>
 
@@ -116,82 +113,20 @@
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-   
         const videoId = '4xDzrJKXOOY';
+        const playIconSrc = 'play-icon.png';
+        const stopIconSrc = '/svg/stop.svg';
 
         let player;
         let playerReady = false;
 
-        const playBtn = document.getElementById('playButton');
-        const stopBtn = document.getElementById('stopButton');
+        const toggleBtn = document.getElementById('toggleButton');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const form = document.getElementById("multiSearchForm");
+        const searchInput = document.getElementById("searchInput");
+        const resultsDiv = document.getElementById("resultsLinks");
 
-        function onYouTubeIframeAPIReady() {
-            console.log("YouTube API Ready");
-            player = new YT.Player('youtube-audio-player', {
-                height: '1', // Minimal size
-                width: '1',
-                videoId: videoId,
-                playerVars: {
-                    'autoplay': 0,       // IMPORTANT: Don't autoplay, wait for button click
-                    'controls': 0,       // Hide player controls
-                    'loop': 1,           // Optional: Loop the video
-                    'playlist': videoId, // Required for single video looping
-                    'showinfo': 0,
-                    'modestbranding': 1
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                    'onError': onPlayerError
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            console.log("Player Ready");
-            playerReady = true;
-            playBtn.disabled = false;
-            stopBtn.disabled = true;
-            updateButtonStates();
-        }
-
-        function onPlayerStateChange(event) {
-            console.log("Player State Changed:", event.data);
-            updateButtonStates();
-        }
-
-        function onPlayerError(event) {
-            console.error("YouTube Player Error:", event.data);
-            alert('An error occurred with the audio player.');
-            playBtn.disabled = true;
-            stopBtn.disabled = true;
-        }
-
-        function updateButtonStates() {
-            if (!playerReady) return;
-            const state = player.getPlayerState();
-            playBtn.disabled = (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING);
-            stopBtn.disabled = !(state === YT.PlayerState.PLAYING || state === YT.PlayerState.PAUSED || state === YT.PlayerState.BUFFERING);
-        }
-
-
-        playBtn.addEventListener('click', () => {
-            if (playerReady) {
-                player.playVideo();
-                console.log("Play button clicked");
-            }
-        });
-
-        stopBtn.addEventListener('click', () => {
-            if (playerReady) {
-                player.stopVideo(); // Stops and resets video to start
-                // player.pauseVideo(); // Use pauseVideo() if you want pause functionality instead
-                console.log("Stop button clicked");
-            }
-        });
-        
         const engines = [
-            // Add or remove engines as needed
             { name: "Google",      url: "https://www.google.com/search?q=" },
             { name: "Bing",        url: "https://www.bing.com/search?q=" },
             { name: "DuckDuckGo",  url: "https://duckduckgo.com/?q=" },
@@ -204,57 +139,93 @@
             { name: "Brave Search",url: "https://search.brave.com/search?q=" },
         ];
 
-        const form = document.getElementById("multiSearchForm");
-        const searchInput = document.getElementById("searchInput");
-        const resultsDiv = document.getElementById("resultsLinks");
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('youtube-audio-player', {
+                height: '1', width: '1', videoId: videoId,
+                playerVars: {
+                    'autoplay': 0, 'controls': 0, 'loop': 1,
+                    'playlist': videoId, 'showinfo': 0, 'modestbranding': 1
+                },
+                events: {
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            playerReady = true;
+            toggleBtn.disabled = false;
+            updateToggleButton();
+        }
+
+        function onPlayerStateChange(event) {
+            updateToggleButton();
+        }
+
+        function onPlayerError(event) {
+            console.error("YouTube Player Error:", event.data);
+            alert('An error occurred with the audio player.');
+            toggleBtn.disabled = true;
+            if (toggleIcon) {
+               toggleIcon.src = playIconSrc;
+               toggleIcon.alt = 'Play';
+               toggleBtn.setAttribute('aria-label', 'Start Audio');
+            }
+        }
+
+        function updateToggleButton() {
+            if (!playerReady || !player || typeof player.getPlayerState !== 'function') return;
+
+            const state = player.getPlayerState();
+            const isPlaying = (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING);
+
+            toggleIcon.src = isPlaying ? stopIconSrc : playIconSrc;
+            toggleIcon.alt = isPlaying ? 'Stop' : 'Play';
+            toggleBtn.setAttribute('aria-label', isPlaying ? 'Stop Audio' : 'Start Audio');
+            toggleBtn.disabled = false;
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            if (!playerReady || !player || typeof player.getPlayerState !== 'function') return;
+
+            const state = player.getPlayerState();
+            if (state === YT.PlayerState.PLAYING) {
+                player.stopVideo();
+            } else {
+                player.playVideo();
+            }
+        });
 
         form.addEventListener("submit", function(e) {
-            e.preventDefault(); // Stop form submission
+            e.preventDefault();
             const query = searchInput.value.trim();
-
-            // Clear previous results
             resultsDiv.innerHTML = '';
 
             if (query) {
                 const encodedQuery = encodeURIComponent(query);
-
                 const resultsHeader = document.createElement('h2');
                 resultsHeader.textContent = `Search Links for: "${query}"`;
                 resultsDiv.appendChild(resultsHeader);
-
                 const list = document.createElement('ul');
-
                 engines.forEach(engine => {
                     const searchURL = engine.url + encodedQuery;
-
                     const listItem = document.createElement('li');
                     const link = document.createElement('a');
                     link.href = searchURL;
                     link.textContent = `Search on ${engine.name}`;
-                    link.target = "_blank"; // Open in a new tab when clicked
-                    link.rel = "noopener noreferrer"; // Security best practice for target="_blank"
-
-                    // Optional: Add engine name label before link for alignment
-                    // const label = document.createElement('span');
-                    // label.className = 'engine-name';
-                    // label.textContent = engine.name + ': ';
-                    // listItem.appendChild(label);
-
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
                     listItem.appendChild(link);
                     list.appendChild(listItem);
                 });
-
                 resultsDiv.appendChild(list);
-
             } else {
                 resultsDiv.innerHTML = '<p>Please enter a search term.</p>';
             }
         });
     </script>
 
-</body>
-</html>
-</body>
-</html>
 </body>
 </html>

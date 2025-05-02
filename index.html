@@ -74,9 +74,12 @@
     </div>
     
     <div class="audio-controls">
-        <button id="playButton" disabled>Start Audio</button>
-        <button id="stopButton" disabled>Stop Audio</button>
-        <button id="pauseButton" disabled>Pause Audio</button>
+        <button id="playButton" class="image-button" disabled aria-label="Start Audio">
+            <img src="play-icon.png" alt="Play">
+        </button>
+        <button id="stopButton" class="image-button" disabled aria-label="Stop Audio">
+            <img src="stop-icon.png" alt="Stop">
+        </button>
     </div>
 
     <div id="youtube-audio-player"></div>

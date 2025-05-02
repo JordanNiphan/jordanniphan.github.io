@@ -93,22 +93,20 @@
     <div class="audio-controls">
         <button id="playButton" disabled>Start Audio</button>
         <button id="stopButton" disabled>Stop Audio</button>
-        <!-- You could add a Pause button too if needed -->
-        <!-- <button id="pauseButton" disabled>Pause Audio</button> -->
+        <button id="pauseButton" disabled>Pause Audio</button>
     </div>
 
     <!-- 2. The <iframe> placeholder -->
     <div id="youtube-audio-player"></div>
 
-    
+     <!-- 3. YouTube API script -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+
     <script>
 
 
-    <!-- 3. YouTube API script -->
-    <script src="https://www.youtube.com/iframe_api"></script>
-
-    <!-- 4. Our JavaScript -->
-        const videoId = '4xDzrJKXOOY'; // <-- Your YouTube Video ID (replace if needed)
+   
+        const videoId = '4xDzrJKXOOY';
 
         let player;
         let playerReady = false;
@@ -205,13 +203,12 @@
             }
         });
 
-        // Uncomment if using pause button
-        // pauseBtn.addEventListener('click', () => {
-        //    if (playerReady) {
-        //        player.pauseVideo();
-        //        console.log("Pause button clicked");
-        //    }
-        // });
+         pauseBtn.addEventListener('click', () => {
+            if (playerReady) {
+                player.pauseVideo();
+                console.log("Pause button clicked");
+            }
+         });
 
         
         const engines = [

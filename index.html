@@ -43,15 +43,44 @@
             opacity: 0;
         }
 
-        .audio-controls button {
-            padding: 10px 15px;
-            margin: 5px;
+        .audio-controls .image-button {
+            /* Remove default button appearance */
+            background: none;
+            border: none;
+            padding: 0; /* Remove padding if you don't want space around the image */
+            margin: 5px; /* Keep some margin */
+
+            /* Set cursor */
             cursor: pointer;
-            font-size: 1em;
+
+            /* Optional: Add transition for smoother opacity change */
+            transition: opacity 0.2s ease-in-out;
+
+            /* Optional: Ensure image fits if needed, or set button size */
+            /* width: 40px;  */
+            /* height: 40px; */
+            line-height: 0; /* Helps remove extra space below inline images */
         }
-        .audio-controls button:disabled {
+
+        .audio-controls .image-button img {
+             /* Make sure image is displayed correctly */
+             display: block;
+             /* Optional: Set image size explicitly if needed */
+             /* width: 100%; */
+             /* height: auto; */
+        }
+
+
+        /* Style for disabled image buttons */
+        .audio-controls .image-button:disabled {
             cursor: not-allowed;
-            opacity: 0.6;
+            opacity: 0.5; /* Make it look faded/disabled */
+            /* Alternatively, you could swap the background-image if using CSS backgrounds */
+        }
+
+        /* Optional: Hover effect */
+        .audio-controls .image-button:not(:disabled):hover {
+            opacity: 0.8; /* Slightly fade on hover */
         }
     </style>
 </head>

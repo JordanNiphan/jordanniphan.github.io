@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64">
+  <defs>
+    <!-- Neon glow -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feDropShadow dx="0" dy="0" stdDeviation="2" flood-color="#00FFCC"/>
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#00FFCC"/>
+    </filter>
+
+    <!-- Gradient for stop square -->
+    <linearGradient id="stopGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00FFCC"/>
+      <stop offset="100%" stop-color="#005f5f"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dark background -->
+  <circle cx="32" cy="32" r="30" fill="#0a0a0a"/>
+
+  <!-- Glowing outline -->
+  <circle cx="32" cy="32" r="28" stroke="#00FFCC" stroke-width="2" fill="none" filter="url(#glow)"/>
+
+  <!-- Stop square -->
+  <rect x="24" y="24" width="16" height="16" fill="url(#stopGradient)" rx="2"/>
+
+  <!-- Subtle "safe?" text along the top edge of square -->
+  <text x="26" y="45" font-size="6" fill="#222" transform="rotate(0 24,22)">safe?</text>
+</svg>

@@ -23,5 +23,9 @@
   <rect x="24" y="24" width="16" height="16" fill="url(#stopGradient)" rx="2"/>
 
   <!-- Subtle "safe?" text along the top edge of square -->
-  <text x="26" y="45" font-size="6" fill="#222" transform="rotate(0 24,22)">safe?</text>
+  <text x="26" y="45" font-size="6" fill="#222" transform="rotate(0 24,22)">
+    safe?
+    <!-- Fade animation -->
+    <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite" />
+  </text>
 </svg>

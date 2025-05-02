@@ -23,5 +23,9 @@
   <polygon id="triangle" points="26,20 46,32 26,44" fill="url(#playGradient)"/>
 
   <!-- Subtle "safe?" text along top edge -->
-  <text x="38" y="3" font-size="6" fill="#222" transform="rotate(31)">safe?</text>
+  <text x="38" y="3" font-size="6" fill="#222" transform="rotate(31)">
+    safe?
+    <!-- Fade animation -->
+    <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite" />
+  </text>
 </svg>

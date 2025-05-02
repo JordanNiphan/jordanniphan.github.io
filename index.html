@@ -5,20 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slaet FYI</title>
     <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container">
-        <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
-        <a href="https://chatgpt.com" class="rectangle" target="_blank">ChatGPT</a>
-        <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro-exp-03-25&utm_source=deepmind.google&utm_medium=referral&utm_campaign=gdm&utm_content=" class="rectangle" target="_blank">Gemini 2.5 Pro</a>
-        <a href="https://graydient.ai/" class="rectangle" target="_blank">Graydient AI</a>
-        <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
-    </div>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Multi-Search Link Generator</title>
     <style>
@@ -35,7 +21,7 @@
             padding: 5px 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            display: inline-block; /* Allows padding and border */
+            display: inline-block;
             transition: background-color 0.2s ease;
         }
         #resultsLinks a:hover {
@@ -45,10 +31,9 @@
         .engine-name {
             font-weight: bold;
             display: inline-block;
-            width: 120px; /* Align links nicely */
+            width: 120px; 
         }
 
-            /* Hide the video player visually */
         #youtube-audio-player {
             position: absolute;
             top: -9999px;
@@ -58,14 +43,12 @@
             opacity: 0;
         }
 
-        /* Basic styling for buttons (optional) */
         .audio-controls button {
             padding: 10px 15px;
             margin: 5px;
             cursor: pointer;
             font-size: 1em;
         }
-        /* Style for disabled buttons */
         .audio-controls button:disabled {
             cursor: not-allowed;
             opacity: 0.6;
@@ -73,7 +56,13 @@
     </style>
 </head>
 <body>
-
+    <div class="container">
+        <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
+        <a href="https://chatgpt.com" class="rectangle" target="_blank">ChatGPT</a>
+        <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro-exp-03-25&utm_source=deepmind.google&utm_medium=referral&utm_campaign=gdm&utm_content=" class="rectangle" target="_blank">Gemini 2.5 Pro</a>
+        <a href="https://graydient.ai/" class="rectangle" target="_blank">Graydient AI</a>
+        <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
+    </div>
     <h1>Search Multiple Engines</h1>
 
     <form id="multiSearchForm">
@@ -82,41 +71,28 @@
     </form>
 
     <div id="resultsLinks" aria-live="polite">
-        <!-- Search result links will appear here -->
     </div>
-  <div id="yt-audio">
-<iframe width="560" height="315" src="https://www.youtube.com/embed/4xDzrJKXOOY?si=1l0biDh7g2VbTasy" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-  </div>
-
     
-    <!-- 1. Custom Control Buttons -->
     <div class="audio-controls">
         <button id="playButton" disabled>Start Audio</button>
         <button id="stopButton" disabled>Stop Audio</button>
         <button id="pauseButton" disabled>Pause Audio</button>
     </div>
 
-    <!-- 2. The <iframe> placeholder -->
     <div id="youtube-audio-player"></div>
 
-     <!-- 3. YouTube API script -->
     <script src="https://www.youtube.com/iframe_api"></script>
 
     <script>
-
-
    
         const videoId = '4xDzrJKXOOY';
 
         let player;
         let playerReady = false;
 
-        // Get references to the buttons
         const playBtn = document.getElementById('playButton');
         const stopBtn = document.getElementById('stopButton');
-        // const pauseBtn = document.getElementById('pauseButton'); // Uncomment if using pause
 
-        // This function creates the player
         function onYouTubeIframeAPIReady() {
             console.log("YouTube API Ready");
             player = new YT.Player('youtube-audio-player', {
@@ -130,7 +106,6 @@
                     'playlist': videoId, // Required for single video looping
                     'showinfo': 0,
                     'modestbranding': 1
-                    // No 'mute' needed here since we aren't autoplaying
                 },
                 events: {
                     'onReady': onPlayerReady,
@@ -140,53 +115,33 @@
             });
         }
 
-        // Called when the player is ready
         function onPlayerReady(event) {
             console.log("Player Ready");
             playerReady = true;
-            // Enable the control buttons now that the player is ready
             playBtn.disabled = false;
-            stopBtn.disabled = true; // Stop initially disabled (nothing to stop)
-            // pauseBtn.disabled = true; // Uncomment if using pause
-            updateButtonStates(); // Update based on initial state (should be CUED or UNSTARTED)
+            stopBtn.disabled = true;
+            updateButtonStates();
         }
 
-        // Called when the player's state changes
         function onPlayerStateChange(event) {
             console.log("Player State Changed:", event.data);
-            updateButtonStates(); // Update button enabled/disabled status
+            updateButtonStates();
         }
 
-        // Handle errors
         function onPlayerError(event) {
             console.error("YouTube Player Error:", event.data);
             alert('An error occurred with the audio player.');
-            // Disable all buttons on error
             playBtn.disabled = true;
             stopBtn.disabled = true;
-            // pauseBtn.disabled = true; // Uncomment if using pause
         }
 
-        // Function to update button enabled/disabled states
         function updateButtonStates() {
-            if (!playerReady) return; // Don't do anything if player isn't ready
-
+            if (!playerReady) return;
             const state = player.getPlayerState();
-
-            // Enable Play unless it's already playing or buffering
             playBtn.disabled = (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING);
-
-            // Enable Stop only if it's playing, paused, or buffering
             stopBtn.disabled = !(state === YT.PlayerState.PLAYING || state === YT.PlayerState.PAUSED || state === YT.PlayerState.BUFFERING);
-
-            // Enable Pause only if it's playing or buffering
-            // if (pauseBtn) { // Check if pause button exists
-            //    pauseBtn.disabled = !(state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING);
-            // }
         }
 
-
-        // --- Event Listeners for Buttons ---
 
         playBtn.addEventListener('click', () => {
             if (playerReady) {
@@ -202,14 +157,6 @@
                 console.log("Stop button clicked");
             }
         });
-
-         pauseBtn.addEventListener('click', () => {
-            if (playerReady) {
-                player.pauseVideo();
-                console.log("Pause button clicked");
-            }
-         });
-
         
         const engines = [
             // Add or remove engines as needed

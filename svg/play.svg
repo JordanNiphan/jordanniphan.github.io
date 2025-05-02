@@ -7,25 +7,44 @@
     </filter>
 
     <!-- Gradient for play triangle -->
-    <linearGradient id="playGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="stopGradient" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#00FFCC"/>
       <stop offset="100%" stop-color="#005f5f"/>
     </linearGradient>
+
+    <!-- Gradient for text -->
+    <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00FFCC"/>
+      <stop offset="100%" stop-color="#006666"/>
+    </linearGradient>
+
+    <!-- Arc path for text -->
+    <path id="lofiArc" d="M20,22 A12,12 0 0,1 32,22" fill="none"/>
   </defs>
 
   <!-- Dark background -->
   <circle cx="32" cy="32" r="30" fill="#0a0a0a"/>
 
-  <!-- Glowing outline -->
-  <circle cx="32" cy="32" r="28" stroke="#00FFCC" stroke-width="2" fill="none" filter="url(#glow)"/>
+  <!-- Glowing animated outline -->
+  <circle cx="32" cy="32" r="28" stroke="#00FFCC" stroke-width="2" fill="none" filter="url(#glow)">
+    <animate attributeName="r" values="26;27;26" dur="5s" repeatCount="indefinite" />
+  </circle>
 
-  <!-- Play triangle -->
-  <polygon id="triangle" points="26,20 46,32 26,44" fill="url(#playGradient)"/>
+  <!-- Rotating group for the triangle -->
+  <g>
+    <animateTransform attributeName="transform"
+                      type="rotate"
+                      values="-2 32 32; 2 32 32; -2 32 32"
+                      dur="10s"
+                      repeatCount="indefinite" />
+    <!-- Play triangle (no glow) -->
+    <polygon points="26,24 26,40 40,32" fill="url(#stopGradient)" />
+  </g>
 
-  <!-- Subtle "safe?" text along top edge -->
-  <text x="38" y="3" font-size="6" fill="#222" transform="rotate(31)">
-    safe?
-    <!-- Fade animation -->
-    <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite" />
-  </text>
+  <!-- Gradient-filled text on arc -->
+  <g transform="rotate(-25 26 20)">
+    <text font-size="5" fill="url(#textGradient)">
+      <textPath href="#lofiArc" startOffset="32%" text-anchor="middle">LoFi</textPath>
+    </text>
+  </g>
 </svg>

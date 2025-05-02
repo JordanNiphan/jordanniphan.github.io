@@ -5,8 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Slaet FYI</title>
     <style>
-        body { font-family: sans-serif; line-height: 1.6; padding: 20px; }
+        body {
+            font-family: sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;          /* 1. Enable Flexbox */
+            align-items: flex-start; /* Align items to the top */
+            gap: 30px;              /* Space between button and main content */
+        }
 
+        /* Styles for the main content area (everything except the button) */
+        .main-content {
+            flex-grow: 1; /* Allows this section to take up remaining space */
+            min-width: 0; /* Prevents flex items from overflowing */
+        }
+
+        /* Container for top links */
         .container { margin-bottom: 20px; }
         .rectangle {
             display: inline-block;
@@ -23,7 +37,9 @@
             background-color: #e0e0e0;
         }
 
-        #multiSearchForm input[type="text"] { padding: 10px; font-size: 1em; margin-right: 5px; min-width: 300px; }
+        /* Search Form Styles */
+        #multiSearchForm { display: flex; flex-wrap: wrap; gap: 5px; } /* Better wrapping for form */
+        #multiSearchForm input[type="text"] { padding: 10px; font-size: 1em; flex-grow: 1; min-width: 250px; } /* Allow input to grow */
         #multiSearchForm input[type="submit"] { padding: 10px 15px; font-size: 1em; cursor: pointer; }
         #resultsLinks { margin-top: 25px; }
         #resultsLinks h2 { margin-bottom: 10px; }
@@ -48,6 +64,7 @@
             width: 120px;
         }
 
+        /* Hidden Player Style */
         #youtube-audio-player {
             position: absolute;
             top: -9999px;
@@ -57,24 +74,33 @@
             opacity: 0;
         }
 
+        /* Audio Button Styles */
+        .audio-controls {
+            flex-shrink: 0; /* Prevent button container from shrinking */
+            /* Padding/Margin is handled by body 'gap' or directly on button */
+        }
+
         .audio-controls .image-button {
             background: none;
             border: none;
             padding: 0;
-            margin: 5px;
+            margin: 0; /* Remove margin if body gap is used */
             cursor: pointer;
             transition: opacity 0.2s ease-in-out;
             line-height: 0;
-             min-width: 44px;
-             min-height: 44px;
+             width: 512px;   /* --- SETTING WIDTH --- */
+             height: 512px;  /* --- SETTING HEIGHT --- */
+             min-width: 512px; /* Ensure it doesn't shrink below */
+             min-height: 512px;/* Ensure it doesn't shrink below */
              display: inline-flex;
              align-items: center;
              justify-content: center;
         }
         .audio-controls .image-button img {
              display: block;
-             width: 64px;
-             height: 64px;
+             width: 100%; /* Image fills the button */
+             height: 100%;/* Image fills the button */
+             object-fit: contain; /* Prevent image distortion if not square */
         }
         .audio-controls .image-button:disabled {
             cursor: not-allowed;
@@ -83,36 +109,62 @@
         .audio-controls .image-button:not(:disabled):hover {
             opacity: 0.8;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) { /* Adjust breakpoint as needed */
+            body {
+                flex-direction: column; /* Stack items vertically */
+                align-items: center; /* Center items horizontally */
+            }
+            .audio-controls {
+                 margin-bottom: 20px; /* Add space below button when stacked */
+                 width: auto; /* Allow container to size naturally */
+            }
+             /* Optionally resize the button itself on small screens */
+             .audio-controls .image-button {
+                 width: 128px; /* Example smaller size */
+                 height: 128px;
+                 min-width: 128px;
+                 min-height: 128px;
+             }
+             #multiSearchForm input[type="text"] { min-width: 150px; } /* Adjust search input */
+        }
+
     </style>
 </head>
 <body>
-    <div class="container">
-        <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
-        <a href="https://chatgpt.com" class="rectangle" target="_blank">ChatGPT</a>
-        <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro-exp-03-25&utm_source=deepmind.google&utm_medium=referral&utm_campaign=gdm&utm_content=" class="rectangle" target="_blank">Gemini 2.5 Pro</a>
-        <a href="https://graydient.ai/" class="rectangle" target="_blank">Graydient AI</a>
-        <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
-    </div>
-
-    <h1>Search Multiple Engines</h1>
-    <form id="multiSearchForm">
-        <input type="text" id="searchInput" placeholder="Enter your search term..." required>
-        <input type="submit" value="Generate Search Links">
-    </form>
-    <div id="resultsLinks" aria-live="polite">
-    </div>
-
+    <!-- 2. Audio Button is now first for flex layout -->
     <div class="audio-controls">
         <button id="toggleButton" class="image-button" disabled aria-label="Start Audio">
             <img id="toggleIcon" src="/svg/play.svg" alt="Play">
         </button>
     </div>
 
+    <!-- 3. Wrap the rest of the content -->
+    <div class="main-content">
+        <div class="container">
+            <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
+            <a href="https://chatgpt.com" class="rectangle" target="_blank">ChatGPT</a>
+            <a href="https://aistudio.google.com/prompts/new_chat?model=gemini-2.5-pro-exp-03-25&utm_source=deepmind.google&utm_medium=referral&utm_campaign=gdm&utm_content=" class="rectangle" target="_blank">Gemini 2.5 Pro</a>
+            <a href="https://graydient.ai/" class="rectangle" target="_blank">Graydient AI</a>
+            <a href="https://drive.google.com/drive/my-drive" class="rectangle" target="_blank">Google Drive</a>
+        </div>
+
+        <h1>Search Multiple Engines</h1>
+        <form id="multiSearchForm">
+            <input type="text" id="searchInput" placeholder="Enter your search term..." required>
+            <input type="submit" value="Generate Search Links">
+        </form>
+        <div id="resultsLinks" aria-live="polite">
+        </div>
+    </div> <!-- End of main-content wrapper -->
+
+
+    <!-- Hidden Player and Scripts remain outside the main content flow visually -->
     <div id="youtube-audio-player"></div>
-
     <script src="https://www.youtube.com/iframe_api"></script>
-
     <script>
+        // --- JAVASCRIPT REMAINS THE SAME ---
         const videoId = '4xDzrJKXOOY';
         const playIconSrc = '/svg/play.svg';
         const stopIconSrc = '/svg/stop.svg';

@@ -157,13 +157,6 @@
 
 
     <div id="youtube-audio-player"></div>
-
-    <div id="comic-container">
-        <h2 id="comic-title">Loading Comic...</h2>
-        <img id="comic-image" src="" alt="XKCD Comic Image">
-        <p id="comic-alt-text"></p>
-    </div>
-
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         const videoId = '4xDzrJKXOOY';
@@ -278,7 +271,14 @@
                 resultsDiv.innerHTML = '<p>Please enter a search term.</p>';
             }
         });
+    </script>
 
+    <div id="comic-container">
+        <h2 id="comic-title">Loading Comic...</h2>
+        <img id="comic-image" src="" alt="XKCD Comic Image">
+        <p id="comic-alt-text"></p>
+    </div>
+    <script>    
          async function fetchLatestXkcd() {
             const titleEl = document.getElementById('comic-title');
             const imgEl = document.getElementById('comic-image');

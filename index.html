@@ -12,16 +12,15 @@
             font-family: sans-serif;
             line-height: 1.6;
             padding: 20px;
-            display: flex;          /* 1. Enable Flexbox */
-            align-items: flex-start; /* Align items to the top */
-            gap: 30px;              /* Space between button and main content */
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
             color: white;
         }
 
-        /* Styles for the main content area (everything except the button) */
         .main-content {
-            flex-grow: 1; /* Allows this section to take up remaining space */
-            min-width: 0; /* Prevents flex items from overflowing */
+            flex-grow: 1; d
+            min-width: 0;
         }
 
         /* Container for top links */
@@ -42,8 +41,8 @@
         }
 
         /* Search Form Styles */
-        #multiSearchForm { display: flex; flex-wrap: wrap; gap: 5px; } /* Better wrapping for form */
-        #multiSearchForm input[type="text"] { padding: 10px; font-size: 1em; flex-grow: 1; min-width: 250px; } /* Allow input to grow */
+        #multiSearchForm { display: flex; flex-wrap: wrap; gap: 5px; } 
+        #multiSearchForm input[type="text"] { padding: 10px; font-size: 1em; flex-grow: 1; min-width: 250px; }
         #multiSearchForm input[type="submit"] { padding: 10px 15px; font-size: 1em; cursor: pointer; }
         #resultsLinks { margin-top: 25px; }
         #resultsLinks h2 { margin-bottom: 10px; }
@@ -80,8 +79,7 @@
 
         /* Audio Button Styles */
         .audio-controls {
-            flex-shrink: 0; /* Prevent button container from shrinking */
-            /* Padding/Margin is handled by body 'gap' or directly on button */
+            flex-shrink: 0;
         }
 
         .audio-controls .image-button {
@@ -114,37 +112,33 @@
             opacity: 0.8;
         }
 
-        /* Responsive adjustments */
-        @media (max-width: 900px) { /* Adjust breakpoint as needed */
+        @media (max-width: 900px) {
             body {
-                flex-direction: column; /* Stack items vertically */
-                align-items: center; /* Center items horizontally */
+                flex-direction: column;
+                align-items: center;
             }
             .audio-controls {
-                 margin-bottom: 20px; /* Add space below button when stacked */
-                 width: auto; /* Allow container to size naturally */
+                 margin-bottom: 20px; 
+                 width: auto;
             }
-             /* Optionally resize the button itself on small screens */
              .audio-controls .image-button {
-                 width: 128px; /* Example smaller size */
+                 width: 128px;
                  height: 128px;
                  min-width: 128px;
                  min-height: 128px;
              }
-             #multiSearchForm input[type="text"] { min-width: 150px; } /* Adjust search input */
+             #multiSearchForm input[type="text"] { min-width: 150px; }
         }
 
     </style>
 </head>
 <body>
-    <!-- 2. Audio Button is now first for flex layout -->
     <div class="audio-controls">
         <button id="toggleButton" class="image-button" disabled aria-label="Start Audio">
             <img id="toggleIcon" src="/svg/play.svg" alt="Play">
         </button>
     </div>
 
-    <!-- 3. Wrap the rest of the content -->
     <div class="main-content">
         <div class="container">
             <a href="https://duck.ai" class="rectangle" target="_blank">Duck AI</a>
@@ -164,11 +158,9 @@
     </div> <!-- End of main-content wrapper -->
 
 
-    <!-- Hidden Player and Scripts remain outside the main content flow visually -->
     <div id="youtube-audio-player"></div>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        // --- JAVASCRIPT REMAINS THE SAME ---
         const videoId = '4xDzrJKXOOY';
         const playIconSrc = '/svg/play.svg';
         const stopIconSrc = '/svg/stop.svg';

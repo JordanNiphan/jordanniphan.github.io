@@ -278,39 +278,5 @@
         <img id="comic-image" src="" alt="XKCD Comic Image">
         <p id="comic-alt-text"></p>
     </div>
-    <script>    
-         async function fetchLatestXkcd() {
-            const titleEl = document.getElementById('comic-title');
-            const imgEl = document.getElementById('comic-image');
-            const altTextEl = document.getElementById('comic-alt-text');
-
-            try {
-                // 1. Fetch the latest comic data
-                const response = await fetch('https://xkcd.com/info.0.json');
-                
-                // 2. Check if the request was successful
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                // 3. Parse the JSON response
-                const data = await response.json();
-
-                // 4. Display the comic data
-                titleEl.textContent = `${data.title} (#${data.num})`;
-                imgEl.src = data.img;
-                imgEl.alt = data.safe_title; // Use safe_title for image's actual alt attribute
-                altTextEl.textContent = data.alt; // Display the full alt-text (hover text)
-
-            } catch (error) {
-                console.error('Error fetching XKCD comic:', error);
-                titleEl.textContent = 'Error';
-                altTextEl.textContent = 'Could not load the comic. Please try again later.';
-                imgEl.style.display = 'none'; // Hide image placeholder on error
-            }
-        }
-
-        fetchLatestXkcd();
-    </script>
-</body>
+ </body>
 </html>

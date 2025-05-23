@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random XKCD Comic (HTML5 only)</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        .xkcd-iframe-container {
+            border: 1px solid #ccc;
+            width: 90%; /* Adjust as needed */
+            max-width: 700px; /* Adjust as needed */
+            height: 600px; /* Adjust as needed, or make it responsive */
+            margin-top: 20px;
+            overflow: hidden; /* Hides scrollbars if content overflows fixed size */
+        }
+        .xkcd-iframe-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none; /* Remove iframe default border */
+        }
+        /* For a more responsive iframe height, you might need JavaScript or aspect-ratio CSS */
+    </style>
+</head>
+<body>
+
+    <h1>Random XKCD Comic</h1>
+    <p>This embeds the entire XKCD page for a random comic. HTML5 alone cannot extract just the image.</p>
+
+    <div class="xkcd-iframe-container">
+        <iframe
+            src="https://c.xkcd.com/random/comic/"
+            title="Random XKCD Comic"
+            loading="lazy"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms">
+            <p>Your browser does not support iframes.
+               <a href="https://c.xkcd.com/random/comic/" target="_blank" rel="noopener noreferrer">
+                   Click here to view a random XKCD comic.
+               </a>
+            </p>
+        </iframe>
+    </div>
+
+    <p>
+        To get a new random comic, you'll need to reload this page.
+    </p>
+
+</body>
+</html>

@@ -4,7 +4,7 @@
 // Incrementing CACHE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 /** @type {string} */
-const CACHE_VERSION = '1748030972|10016546122';
+const CACHE_VERSION = '1748031283|10327114863';
 /** @type {string} */
 const CACHE_PREFIX = 'SlaetJ-sw-cache-';
 const CACHE_NAME = CACHE_PREFIX + CACHE_VERSION;

@@ -160,12 +160,6 @@
     <div id="youtube-audio-player"></div>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        const videoId = '4xDzrJKXOOY';
-        const playIconSrc = '/svg/play.svg';
-        const stopIconSrc = '/svg/stop.svg';
-
-        let player;
-        let playerReady = false;
 
         const toggleBtn = document.getElementById('toggleButton');
         const toggleIcon = document.getElementById('toggleIcon');
@@ -186,64 +180,6 @@
             { name: "Brave Search",url: "https://search.brave.com/search?q=" },
         ];
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('youtube-audio-player', {
-                height: '1', width: '1', videoId: videoId,
-                playerVars: {
-                    'autoplay': 0, 'controls': 0, 'loop': 1,
-                    'playlist': videoId, 'showinfo': 0, 'modestbranding': 1
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange,
-                    'onError': onPlayerError
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            playerReady = true;
-            toggleBtn.disabled = false;
-            updateToggleButton();
-        }
-
-        function onPlayerStateChange(event) {
-            updateToggleButton();
-        }
-
-        function onPlayerError(event) {
-            console.error("YouTube Player Error:", event.data);
-            alert('An error occurred with the audio player.');
-            toggleBtn.disabled = true;
-            if (toggleIcon) {
-               toggleIcon.src = playIconSrc;
-               toggleIcon.alt = 'Play';
-               toggleBtn.setAttribute('aria-label', 'Start Audio');
-            }
-        }
-
-        function updateToggleButton() {
-            if (!playerReady || !player || typeof player.getPlayerState !== 'function') return;
-
-            const state = player.getPlayerState();
-            const isPlaying = (state === YT.PlayerState.PLAYING || state === YT.PlayerState.BUFFERING);
-
-            toggleIcon.src = isPlaying ? stopIconSrc : playIconSrc;
-            toggleIcon.alt = isPlaying ? 'Stop' : 'Play';
-            toggleBtn.setAttribute('aria-label', isPlaying ? 'Stop Audio' : 'Start Audio');
-            toggleBtn.disabled = false;
-        }
-
-        toggleBtn.addEventListener('click', () => {
-            if (!playerReady || !player || typeof player.getPlayerState !== 'function') return;
-
-            const state = player.getPlayerState();
-            if (state === YT.PlayerState.PLAYING) {
-                player.stopVideo();
-            } else {
-                player.playVideo();
-            }
-        });
 
         form.addEventListener("submit", function(e) {
             e.preventDefault();

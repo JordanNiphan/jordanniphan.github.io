@@ -65,77 +65,10 @@
             width: 120px;
         }
 
-        #youtube-audio-player {
-            position: absolute;
-            top: -9999px;
-            left: -9999px;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-        }
-
-        .audio-controls {
-            flex-shrink: 0;
-        }
-
-        .audio-controls .image-button {
-            background: none;
-            border: none;
-            padding: 0;
-            margin: 0;
-            cursor: pointer;
-            transition: opacity 0.2s ease-in-out;
-            line-height: 0;
-             width: 512px; 
-             height: 512px;
-             min-width: 512px;
-             min-height: 512px;
-             display: inline-flex;
-             align-items: center;
-             justify-content: center;
-        }
-        .audio-controls .image-button img {
-             display: block;
-             width: 100%;
-             height: 100%
-             object-fit: contain; 
-        }
-        .audio-controls .image-button:disabled {
-            cursor: not-allowed;
-            opacity: 0.5;
-        }
-        .audio-controls .image-button:not(:disabled):hover {
-            opacity: 0.8;
-        }
-
-        @media (max-width: 900px) {
-            body {
-                flex-direction: column;
-                align-items: center;
-            }
-            .audio-controls {
-                 margin-bottom: 20px; 
-                 width: auto;
-            }
-             .audio-controls .image-button {
-                 width: 128px;
-                 height: 128px;
-                 min-width: 128px;
-                 min-height: 128px;
-             }
-             #multiSearchForm input[type="text"] { min-width: 150px; }
-        }
-
     </style>
 </head>
 <body>
-    <div class="audio-controls">
-        <button id="toggleButton" class="image-button" disabled aria-label="Start Audio">
-            <img id="toggleIcon" src="/svg/play.svg" alt="Play">
-        </button>
-    </div>
-
-    <div class="main-content">
+      <div class="main-content">
         <div class="container">
             <a href="https://www.reddit.com/answers" class="rectangle" target="_blank">Reddit Answers</a>
             <a href="https://monkeytype.com" class="rectangle" target="_blank">MonkeyType</a>
@@ -157,8 +90,6 @@
     </div>
 
 
-    <div id="youtube-audio-player"></div>
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
 
         const toggleBtn = document.getElementById('toggleButton');
